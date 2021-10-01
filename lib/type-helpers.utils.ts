@@ -1,4 +1,5 @@
 import { Logger, Type } from '@nestjs/common';
+import { defaultMetadataStorage } from 'class-transformer/cjs/storage';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const logger = new Logger('MappedTypes');
@@ -113,20 +114,9 @@ function inheritTransformerMetadata(
   targetClass: Function,
   isPropertyInherited?: (key: string) => boolean,
 ) {
-  let classTransformer: any;
-  try {
-    /** "class-transformer" >= v0.3.x */
-    classTransformer = require('class-transformer/cjs/storage');
-  } catch {
-    /** "class-transformer" <= v0.3.x */
-    classTransformer = require('class-transformer/storage');
-  }
-  const metadataStorage /*: typeof import('class-transformer/types/storage').defaultMetadataStorage */ =
-    classTransformer.defaultMetadataStorage;
-
   while (parentClass && parentClass !== Object) {
-    if (metadataStorage[key].has(parentClass)) {
-      const metadataMap = metadataStorage[key] as Map<
+    if (defaultMetadataStorage[key].has(parentClass)) {
+      const metadataMap = defaultMetadataStorage[key] as Map<
         Function,
         Map<string, any>
       >;
